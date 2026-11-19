@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import ResourcePage from './pages/ResourcePage';
 import Settings from './pages/Settings';
+import SahityaCMS from './pages/SahityaCMS';
 
 function Protected({ children }) {
   const { authed } = useAuth();
@@ -22,6 +23,8 @@ export default function App() {
           <Route path="/admin/*" element={<Navigate to="/" replace />} />
           <Route path="/" element={<Protected><Layout /></Protected>}>
             <Route index element={<Dashboard />} />
+            <Route path="sahitya" element={<SahityaCMS />} />
+            <Route path="library" element={<SahityaCMS />} />
             <Route path="settings" element={<Settings />} />
             <Route path=":resource" element={<ResourcePage />} />
           </Route>

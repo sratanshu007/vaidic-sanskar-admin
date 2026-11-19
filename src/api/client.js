@@ -19,20 +19,23 @@ const client = axios.create({
 const TOKEN_KEY = 'vs_admin_token';
 export function getToken() {
   try {
-    let t = localStorage.getItem(TOKEN_KEY);
-    if (!t) {
-      t = 'admin-token';
-      localStorage.setItem(TOKEN_KEY, t);
+    const t = localStorage.getItem(TOKEN_KEY);
+    if (!t || t === 'admin-token' || t === 'demo-token') {
+      return null;
     }
     return t;
   } catch {
-    return 'admin-token';
+    return null;
   }
 }
 
 export function setToken(t) {
   try {
-    t ? localStorage.setItem(TOKEN_KEY, t) : localStorage.setItem(TOKEN_KEY, 'admin-token');
+    if (t && t !== 'admin-token' && t !== 'demo-token') {
+      localStorage.setItem(TOKEN_KEY, t);
+    } else {
+      localStorage.removeItem(TOKEN_KEY);
+    }
   } catch {}
 }
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BarChart, Donut } from '../components/charts';
-import { dashboardApi, api } from '../api/services';
+import { dashboardApi, api, sahityaApi } from '../api/services';
 
 const KPI = ({ ic, bg, val, lbl }) => (
   <div className="kpi">
@@ -45,6 +45,7 @@ export default function Dashboard() {
     roles: [],
   });
   const [recentActivities, setRecentActivities] = useState([]);
+  const [sahityaStats, setSahityaStats] = useState({ totalContent: 17, publishedContent: 17, totalCategories: 15 });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -57,6 +58,16 @@ export default function Dashboard() {
         }
       } catch (err) {
         console.warn('Dashboard summary fetch failed, using live store count:', err);
+      }
+
+      // Fetch Sahitya Stats
+      try {
+        const sStats = await sahityaApi.stats();
+        if (isMounted && sStats?.stats) {
+          setSahityaStats(sStats.stats);
+        }
+      } catch (err) {
+        console.warn('Sahitya stats fetch failed:', err);
       }
 
       // Fetch recent real events / vendors
@@ -114,6 +125,69 @@ export default function Dashboard() {
         <KPI ic="🪪" bg="#C9881A" val={kyc} lbl="KYC Pending" />
       </div>
 
+      {/* SAHITYA SANGRAH READING LIBRARY BANNER */}
+      <div
+        style={{
+          background: 'linear-gradient(135deg, #790D13 0%, #4A080B 100%)',
+          color: '#FFF',
+          borderRadius: 14,
+          padding: '18px 24px',
+          marginBottom: 20,
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: 16,
+          boxShadow: '0 4px 14px rgba(121, 13, 19, 0.2)',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <div
+            style={{
+              width: 50,
+              height: 50,
+              borderRadius: 12,
+              background: 'rgba(255,255,255,0.18)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 26,
+            }}
+          >
+            📖
+          </div>
+          <div>
+            <div style={{ fontSize: 18, fontWeight: 800 }}>साहित्य संग्रह (Sahitya Sangrah CMS)</div>
+            <div style={{ fontSize: 13, opacity: 0.9, marginTop: 2 }}>
+              डिजिटल लाइब्रेरी • {sahityaStats.totalContent || 17} पावन साहित्य (आरती, चालीसा, स्तोत्र) • {sahityaStats.totalCategories || 15} श्रेणियां
+            </div>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+          <button
+            onClick={() => nav('/sahitya')}
+            style={{
+              padding: '10px 22px',
+              background: '#F59E0B',
+              color: '#2B0000',
+              border: 'none',
+              borderRadius: 10,
+              fontWeight: 800,
+              fontSize: 14,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              boxShadow: '0 2px 8px rgba(0,0,0,0.25)',
+            }}
+          >
+            <span>साहित्य प्रबंधन खोलें (Open CMS)</span>
+            <span>→</span>
+          </button>
+        </div>
+      </div>
+
       <div className="grid2">
         <div className="panel">
           <h3>Revenue & Bookings</h3>
@@ -136,6 +210,7 @@ export default function Dashboard() {
           <h3>Needs Attention</h3>
           <div className="psub">Approvals & Verification Queue</div>
           <div className="activity">
+            <Att ic="📖" bg="var(--accent-soft)" fg="var(--accent)" tx="साहित्य संग्रह: ग्रंथ, आरतियां एवं बल्क आयात" tag="Digital Library" onClick={() => nav('/sahitya')} />
             <Att ic="🪪" bg="var(--warn-soft)" fg="var(--warn)" tx={`${kyc} partner KYC awaiting review`} tag="Partner App" onClick={() => nav('/vendors')} />
             <Att ic="💸" bg="var(--good-soft)" fg="var(--good)" tx={`${pay} payout requests pending`} tag="Finance" onClick={() => nav('/payouts')} />
             <Att ic="🎉" bg="var(--info-soft)" fg="var(--info)" tx={`${ev} event inquiries near SLA`} tag="Mandali" onClick={() => nav('/events')} />

@@ -554,12 +554,12 @@ export const resources = {
 
   library: {
     title: 'Content / Library', crumb: 'Sahitya Sangrah', icon: '📖', group: 'Platform',
-    service: api.library, mock: mock.library, searchKeys: ['title', 'type'],
+    service: api.library, mock: mock.library, searchKeys: ['title', 'type', 'author'],
     statusKey: 'status', statuses: ['Published', 'Draft'],
     columns: [
       { key: 'title', label: 'Title', className: 'cellmain' },
       { key: 'type', label: 'Type' }, { key: 'lang', label: 'Language' },
-      { key: 'audio', label: 'Audio' }, { key: 'plays', label: 'Plays', className: 'num' },
+      { key: 'author', label: 'Author/Deity' },
       { key: 'status', label: 'Status', render: (l) => <Pill s={l.status} /> },
     ],
     actions: (l, patch, onView, onEdit, onDelete, onDetails) => (
@@ -578,6 +578,11 @@ export const resources = {
         </button>
       </div>
     ),
+  },
+
+  sahitya: {
+    title: 'Sahitya Sangrah', crumb: 'साहित्य संग्रह • Reading-Only Digital Library CMS', icon: '📖', group: 'User App',
+    service: api.library, mock: mock.library,
   },
 
   banners: {
@@ -612,9 +617,15 @@ export const resources = {
 
 // Sidebar structure (order + grouping)
 export const NAV = [
-  { group: 'Overview', items: [{ key: 'dash', title: 'Dashboard', icon: '📊' }] },
+  {
+    group: 'Overview',
+    items: [
+      { key: 'dash', title: 'Dashboard', icon: '📊' },
+      { key: 'sahitya', title: 'Sahitya Sangrah (साहित्य)', icon: '📖' },
+    ],
+  },
   { group: 'E-Store & Products', items: ['products', 'orders'].map((k) => ({ key: k, ...resources[k] })) },
-  { group: 'User App', items: ['bookings', 'sessions', 'subs', 'temples', 'donations', 'users'].map((k) => ({ key: k, ...resources[k] })) },
+  { group: 'User App', items: ['bookings', 'sessions', 'sahitya', 'subs', 'temples', 'donations', 'users'].map((k) => ({ key: k, ...resources[k] })) },
   { group: 'Partner App', items: ['vendors', 'jobs', 'events', 'payouts'].map((k) => ({ key: k, ...resources[k] })) },
-  { group: 'Platform', items: ['reviews', 'library', 'banners'].map((k) => ({ key: k, ...resources[k] })).concat([{ key: 'settings', title: 'Settings', icon: '⚙️' }]) },
+  { group: 'Platform', items: ['reviews', 'banners'].map((k) => ({ key: k, ...resources[k] })).concat([{ key: 'settings', title: 'Settings', icon: '⚙️' }]) },
 ];

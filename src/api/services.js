@@ -50,6 +50,23 @@ export const dashboardApi = {
   summary: () => client.get('dashboard/summary'),
 };
 
+// Sahitya Sangrah Reading-Only CMS API
+export const sahityaApi = {
+  stats: () => client.get('sahitya/dashboard/stats'),
+  list: (params) => client.get('sahitya', { params }),
+  get: (id) => client.get(`sahitya/${id}`),
+  create: (data) => client.post('sahitya', data),
+  update: (id, data) => client.put(`sahitya/${id}`, data),
+  delete: (id) => client.delete(`sahitya/${id}`),
+  publish: (id) => client.post(`sahitya/${id}/publish`),
+  unpublish: (id) => client.post(`sahitya/${id}/unpublish`),
+  bulkImport: (payload) => client.post('sahitya/bulk-import', payload),
+  categories: () => client.get('sahitya/categories'),
+  createCategory: (data) => client.post('sahitya/categories', data),
+  updateCategory: (id, data) => client.put(`sahitya/categories/${id}`, data),
+  deleteCategory: (id) => client.delete(`sahitya/categories/${id}`),
+};
+
 // Auth
 export const authApi = {
   login: (email, password) => client.post('auth/login', { email, password }),

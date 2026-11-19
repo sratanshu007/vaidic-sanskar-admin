@@ -7,12 +7,18 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
     try {
-      return JSON.parse(localStorage.getItem('vs_admin_user') || 'null') || { name: 'Super Admin', email: 'admin@vaidicsanskar.com', role: 'Owner' };
+      const stored = localStorage.getItem('vs_admin_user');
+      const token = getToken();
+      if (!token) return null;
+      return JSON.parse(stored || 'null');
     } catch {
-      return { name: 'Super Admin', email: 'admin@vaidicsanskar.com', role: 'Owner' };
+      return null;
     }
   });
-  const [authed, setAuthed] = useState(true);
+  const [authed, setAuthed] = useState(() => {
+    const t = getToken();
+    return Boolean(t && t !== 'demo-token' && t !== 'admin-token');
+  });
 
   const login = useCallback(async (email, password) => {
     try {
